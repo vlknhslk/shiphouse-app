@@ -1,14 +1,22 @@
-import { useEffect } from 'react';
 import { Stack } from 'expo-router';
+import { useEffect } from 'react';
+import {
+  useFonts,
+  Figtree_400Regular,
+  Figtree_500Medium,
+  Figtree_600SemiBold,
+  Figtree_700Bold,
+} from '@expo-google-fonts/figtree';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
-import { useFonts, Figtree_400Regular, Figtree_500Medium, Figtree_600SemiBold, Figtree_700Bold } from '@expo-google-fonts/figtree';
-import { useFrameworkReady } from '@/hooks/useFrameworkReady';
-import { SplashScreen } from 'expo-router';
+import 'react-native-reanimated';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
+// Splash screen'i görünür tut
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
-  useFrameworkReady();
-
-  const [fontsLoaded, fontError] = useFonts({
+  const [loaded, error] = useFonts({
     'Figtree-Regular': Figtree_400Regular,
     'Figtree-Medium': Figtree_500Medium,
     'Figtree-SemiBold': Figtree_600SemiBold,
@@ -16,37 +24,29 @@ export default function RootLayout() {
   });
 
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    if (error) throw error;
+  }, [error]);
+
+  useEffect(() => {
+    if (loaded) {
       SplashScreen.hideAsync();
     }
-  }, [fontsLoaded, fontError]);
+  }, [loaded]);
 
-  if (!fontsLoaded && !fontError) {
+  if (!loaded) {
     return null;
   }
 
   return (
-    <>
-      <Stack>
-        <Stack.Screen name="index" options={{ headerShown: false }} />
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Stack
+        screenOptions={{
+          headerShown: false,
+        }}
+      >
         <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
-        <Stack.Screen 
-          name="camera" 
-          options={{ 
-            presentation: 'fullScreenModal',
-            animation: 'slide_from_bottom'
-          }} 
-        />
-        <Stack.Screen 
-          name="manual-entry" 
-          options={{ 
-            presentation: 'card',
-            animation: 'slide_from_right'
-          }} 
-        />
-        <Stack.Screen name="+not-found" options={{ title: 'Not Found' }} />
       </Stack>
       <StatusBar style="dark" />
-    </>
+    </GestureHandlerRootView>
   );
 }

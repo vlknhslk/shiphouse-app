@@ -1,44 +1,41 @@
 import { Tabs } from 'expo-router';
-import { Package2, ListChecks, QrCode } from 'lucide-react-native';
+import { Package, Home } from 'lucide-react-native';
+import { colors } from '@/constants';
+
+interface TabBarIconProps {
+  color: string;
+  size: number;
+}
 
 export default function TabLayout() {
   return (
     <Tabs
       screenOptions={{
-        headerShown: true,
+        headerShown: false,
+        tabBarActiveTintColor: colors.primary,
+        tabBarInactiveTintColor: colors.textSecondary,
         tabBarStyle: {
-          backgroundColor: '#ffffff',
-          borderTopColor: '#e5e5e5',
+          borderTopWidth: 1,
+          borderTopColor: colors.border,
         },
-        tabBarActiveTintColor: '#1a1a1a',
-        tabBarInactiveTintColor: '#6B7280',
-        headerTitleStyle: {
-          fontFamily: 'Figtree-SemiBold',
-        },
-        tabBarLabelStyle: {
-          fontFamily: 'Figtree-Medium',
-          fontSize: 12,
-        },
-      }}>
+      }}
+    >
       <Tabs.Screen
-        name="index"
+        name="dashboard"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color, size }) => <Package2 size={size} color={color} />,
+          tabBarIcon: ({ color, size }: TabBarIconProps) => (
+            <Home size={size} color={color} />
+          ),
         }}
       />
       <Tabs.Screen
         name="receiving"
         options={{
           title: 'Receiving',
-          tabBarIcon: ({ color, size }) => <QrCode size={size} color={color} />,
-        }}
-      />
-      <Tabs.Screen
-        name="processing"
-        options={{
-          title: 'Processing',
-          tabBarIcon: ({ color, size }) => <ListChecks size={size} color={color} />,
+          tabBarIcon: ({ color, size }: TabBarIconProps) => (
+            <Package size={size} color={color} />
+          ),
         }}
       />
     </Tabs>

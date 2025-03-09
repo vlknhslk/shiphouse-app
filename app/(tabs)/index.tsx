@@ -1,6 +1,18 @@
-import { View, Text, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Platform,
+} from 'react-native';
 import { router } from 'expo-router';
-import { Barcode, SquarePen as PenSquare, CirclePlay as PlayCircle, ClipboardList } from 'lucide-react-native';
+import {
+  Barcode,
+  SquarePen as PenSquare,
+  CirclePlay as PlayCircle,
+  ClipboardList,
+  Camera as CameraIcon,
+} from 'lucide-react-native';
 
 export default function DashboardScreen() {
   return (
@@ -11,7 +23,7 @@ export default function DashboardScreen() {
 
       <View style={styles.buttonContainer}>
         <View style={styles.scanningSection}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={() => router.push('/camera')}
           >
@@ -19,7 +31,7 @@ export default function DashboardScreen() {
             <Text style={styles.buttonText}>Scan Barcode</Text>
           </TouchableOpacity>
 
-          <TouchableOpacity 
+          <TouchableOpacity
             style={styles.button}
             onPress={() => router.push('/manual-entry')}
           >
@@ -29,7 +41,17 @@ export default function DashboardScreen() {
 
           <TouchableOpacity style={styles.button}>
             <PlayCircle size={24} color="#1a1a1a" />
-            <Text style={styles.buttonText}>Auto Mode (Waiting for Package)</Text>
+            <Text style={styles.buttonText}>
+              Auto Mode (Waiting for Package)
+            </Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.button}
+            onPress={() => router.push('/ocr-camera')}
+          >
+            <CameraIcon size={24} color="#1a1a1a" />
+            <Text style={styles.buttonText}>OCR - Fotoğraftan Metin Çıkar</Text>
           </TouchableOpacity>
         </View>
 
@@ -39,7 +61,7 @@ export default function DashboardScreen() {
           <View style={styles.separatorLine} />
         </View>
 
-        <TouchableOpacity 
+        <TouchableOpacity
           style={styles.logButton}
           onPress={() => router.push('/(tabs)/receiving')}
         >
@@ -146,7 +168,7 @@ const styles = StyleSheet.create({
   },
   logButtonText: {
     fontSize: 16,
-    fontFamily: 'Inter-SemiBold',
+    fontFamily: 'Figtree-SemiBold',
     color: '#ffffff',
     marginLeft: 16,
   },

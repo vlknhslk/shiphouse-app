@@ -1,0 +1,210 @@
+---
+description: ShipHouse operatörleri için paket yönetimi uygulaması. Expo ve React Native ile iOS ve Android için geliştiriliyor.
+globs: 
+alwaysApply: false
+---
+# [ShipHouse APP] PRD
+
+## 1. Proje Genel Bakış
+Ürün Adı: ShipHouse Mobil Uygulaması
+Amaç: ShipHouse depolarında çalışan operatörlerin, Forwardme.com, Ship7.com ve Store2Door.com gibi mail forwarding hizmeti veren şirketler için paketleri yönetmesini kolaylaştırmak.
+
+Hedef Kullanıcılar: ShipHouse deposunda çalışan operatörler.
+
+Platformlar: iOS ve Android (Expo ve React Native ile geliştirilecek).
+
+## 2. Ana Özellikler
+Uygulamanızın dört temel işlevi olacak. Her birini detaylıca açıklayayım:
+
+### Dashboard (Ana Ekran)
+Ne İşe Yarar: Operatörlerin uygulamayı açtığında karşılaştığı ilk ekran. Burada dört seçenek olacak: Scan Barcode, Enter Barcode Manually, Auto Mode ve Log Received Packages.
+Nasıl Görünecek: Basit bir ekran, her seçenek için birer düğme ve altında navigasyon çubuğu (Dashboard, Receiving, Processing).
+
+### Scan Barcode (Barkod Tara)
+Ne İşe Yarar: Operatörler, bir paketin raf etiketindeki barkodu tarayarak paketi bulacak. Ardından kamera açılacak, ekstra fotoğraflar çekilecek ve bu fotoğraflar ilgili projeye (örneğin, Forwardme.com) yüklenecek.
+
+Kullanıcı Deneyimi: Barkod tarayıcı ekranı açılacak, barkod çerçeve içine hizalandığında otomatik okunacak, sonra kamera ile fotoğraf çekme ekranına geçilecek.
+
+Teknik Detay: Expo-barcode-scanner ve expo-camera kullanılacak.
+
+Islev:
+- Paket üzerindeki barkod okutulur.
+-	Barkod okutulduktan sonra, müşteri hesabına işlenmiş paket için bir “raf etiketi” oluşturulur.
+-	Etiket okutulduğunda, ilgili paket mobil uygulamada locate edilir.
+-	Kamera kullanılarak paketin ekstra fotoğrafları çekilir.
+-	Çekilen fotoğraflar ilgili projeye (Forwardme.com, Ship7.com, Store2Door.com) aktarılır.
+
+### Enter Barcode Manually (Barkod Elle Gir)
+Ne İşe Yarar: Barkod taranamıyorsa, operatörler paketin raf ID’sini (sadece rakam) elle girecek. Paket bulunduktan sonra /musteri bilgileri ekranda gorunecek ayni zamanda/ “Take Extra Photos” düğmesiyle fotoğraflar çekilip yüklenecek.
+
+Kullanıcı Deneyimi: Bir sayı giriş alanı ve “Ara” düğmesi olacak. Doğru ID girilirse paket bilgileri görünecek (örneğin, müşteri adı, suite kodu), ardından fotoğraf çekme seçeneği çıkacak.
+
+Teknik Detay: TextInput ile rakam girişi alınacak, expo-camera ile fotoğraflar çekilecek.
+
+İşlev:
+-	Operatör, numeric (sayısal) veri girişi için bir input alanına raf id numarasını yazar.
+-	Arama butonuna basıldığında, sistem ilgili paketi locate eder.
+- “Take Extra Photos” butonuna tıklayarak paketin ekstra fotoğrafları çekilir ve sisteme yüklenir.
+
+Özellikler:
+-	Kullanıcı dostu ve hata önleyici tasarım.
+-	Fotoğraf çekme ve yükleme adımında kullanıcı geri bildirimi (örneğin, yükleme tamamlandığında bildirim).
+
+### Auto Mode (Otomatik Mod)
+Ne İşe Yarar: Operatör, desktopta bir müşterinin hesabını suite numarasıyla açtığında, mobil uygulama bu hesabı algılayacak ve çekilen fotoğrafları doğru hesaba yükleyecek. Bu modun aktif olmasi gerekir. 
+
+Kullanıcı Deneyimi: Tıklandığında bir yükleme çubuğu görünecek, desktop ile eşleşme tamamlanınca fotoğraf çekme ekranı açılacak.
+
+Teknik Detay: Expo-camera kullanılacak, desktop ile eşleşme için bir API entegrasyonu gerekebilir.
+
+İşlev:
+-	Operatör bu modu seçtiğinde, mobil uygulamada bir loading bar (yükleme çubuğu) gösterilir.
+-	Aynı anda, desktop üzerinden package-entry sayfasında ilgili müşteri hesabı suite numarası ile locate edilir ve aktif hale getirilir.
+-	Mobilde çekilecek fotoğrafların doğru hesaba yüklenebilmesi için, desktop’daki açık müşteri hesabıyla eşleştirme yapılır.
+-	Fotoğraf çekme ve upload işlemleri otomatik olarak yürütülür.	
+
+Teknik Araçlar:
+-	expo-camera uygulamasının yoğun kullanımı.
+-	Eşleştirme için mobil ve desktop arasında senkronizasyon ve güvenli veri aktarımı.
+
+### Log Received Packages (Teslim Alınan Paketleri Kaydet - Gate Scan)
+Ne İşe Yarar: Kurye firmaları (FedEx, UPS gibi) paketleri depoya getirdiğinde, operatörler shipping etiketindeki takip numarasını tarayarak paketin teslim alındığını kaydedecek.
+Kullanıcı Deneyimi: Barkod tarayıcı açılacak, takip numarası okunduğunda sistemde kaydedilecek ve bir onay mesajı görünecek.
+
+Teknik Detay: Expo-barcode-scanner ile takip numaraları taranacak.
+
+İşlev:
+-	Günlük olarak, kuryeler (FedEx, UPS, USPS, DHL, vb.) tarafından teslim edilen paketlerin takip numaraları okutulur.
+-	Barkod üzerindeki takip numarası sistemde kayda alınır.
+-	Bu sayede, paketlerin kurye firmaları tarafından teslim edilip edilmediği doğrulanır.
+
+## 3. Teknik Gereksinimler
+
+Platform: iOS ve Android (Expo ile tek kodla iki platformda çalışacak).
+
+Araçlar:
+Expo ve React Native (temel yapı).
+Expo-barcode-scanner (barkod tarama).
+Expo-camera (fotoğraf çekme).
+Fotoğraf yükleme için projelerin sistemlerine bağlanacak bir API.
+Performans: Uygulama hızlı ve sorunsuz çalışmalı, fotoğraflar hızlı yüklenmeli.
+
+
+## 4. Kullanıcı Deneyimi (UX) Gereksinimleri
+Kolay Kullanım: Operatörler için basit ve anlaşılır bir tasarım (örneğin, büyük düğmeler, net yazılar).
+
+Geri Bildirim: Tarama veya yükleme sırasında yükleme çubuğu, hata mesajları veya başarı bildirimleri gösterilecek.
+
+Tasarım: Temiz bir arayüz, Figtree yazı tipi ve siyah-beyaz renk teması (#1a1a1a ve #ffffff).
+
+
+## Kullanıcı Akışları (User Flows)
+*Normal Barkod Okutma:*
+	1.	Operatör uygulamayı açar.
+	2.	“Scan Barcode” seçeneğine tıklar.
+	3.	Barkod okutulur, ilgili paket locate edilir.
+	4.	Kamera aracılığıyla ekstra fotoğraflar çekilir.
+	5.	Fotoğraflar ilgili müşteri projesine gönderilir.
+*Manuel Barkod Girişi:*
+	1.	Operatör “Enter Barcode Manually” sayfasına geçer.
+	2.	Raf id numarası girilir ve “Search” butonuna tıklanır.
+	3.	Paket locate edildikten sonra “Take Extra Photos” butonuna basılır.
+	4.	Fotoğraflar çekilip sisteme yüklenir.
+*Otomatik Mod:*
+	1.	Operatör “Auto Mode” seçeneğine tıklar.
+	2.	Mobilde loading bar görünür.
+	3.	Desktop’da müşteri hesabı locate edilip aktif hale getirilir.
+	4.	Fotoğraf çekme ve upload işlemleri otomatik gerçekleşir.
+*Gate Scan:*
+	1.	Operatör “Log Received Packages” moduna geçer.
+	2.	Kurye firmasının gönderdiği barkod okutulur.
+	3.	Takip numarası sistemde kaydedilir ve teslim doğrulaması yapılır.
+
+
+### Non-Teknik Gereksinimler:
+	•	Kullanıcı Deneyimi: Basit, sezgisel ve eğitim gerektirmeyen arayüz.
+	•	Geri Bildirim: Her adımda operatöre uygun bildirimler ve hata mesajları.
+	•	Destek ve Eğitim: Uygulama kullanımı için kısa eğitim dokümantasyonları ve destek materyalleri.
+
+### Entegrasyon Senaryoları ve İletişim
+	•	Desktop-Mobil Eşleştirme: Otomatik modda, desktop ve mobil uygulamalar arasında gerçek zamanlı senkronizasyon sağlanacaktır.
+	•	Veri Aktarımı: Çekilen fotoğraflar ve barkod verileri ilgili projelere (Forwardme.com, Ship7.com, Store2Door.com) API’ler aracılığıyla aktarılacak.
+	•	Hata Yönetimi: Herhangi bir aksaklık durumunda, operatörlere detaylı hata mesajları ve çözüm önerileri sunulacaktır.
+
+### Riskler ve Varsayımlar
+
+	•	Mobil ve desktop arasındaki eşleştirme sorunları.
+	•	Barkod okuyucu ve kamera modüllerinin farklı cihazlarda performans farklılıkları.
+	•	API entegrasyonlarında yaşanabilecek gecikmeler.
+	•	Varsayımlar:
+	•	Operatörler temel mobil cihaz kullanımı konusunda eğitimli olacak.
+	•	Tüm cihazlarda yeterli internet bağlantısı mevcut olacak.
+	•	Entegrasyon API’leri zamanında ve stabil olarak geliştirilecektir.
+
+
+
+### Dosya Yapısı ve İsimlendirme Kuralları
+
+#### Dosya Organizasyonu:
+	•	Her bir özellik (ör. Scan Barcode, Manual Entry, Auto Mode, Log Received Packages) ayrı modüller halinde organize edilmelidir.
+	•	Ortak bileşenler (örn. UI elemanları, yardımcı fonksiyonlar) için ayrı klasörler oluşturulmalıdır.
+
+#### İsimlendirme:
+	•	Dosya ve klasör isimleri anlamlı ve tek tip (lowercase, kebab-case veya camelCase) kullanılmalıdır.
+	•	React bileşenleri PascalCase ile adlandırılmalıdır.
+
+#### Kod Biçimlendirme ve Standartlar
+
+#### Kod Stili:
+	•	Tüm JavaScript/TypeScript kodları standart formatlayıcı (Prettier vb.) ile düzenlenmelidir.
+	•	İlgili ESLint kuralları uygulanarak hatasız ve okunabilir kod yazımı sağlanmalıdır.
+
+#### Yorumlar:
+	•	Karmaşık mantık bölümleri, açıklayıcı yorumlarla desteklenmelidir.
+	•	Fonksiyon ve bileşen açıklamaları, JSDoc standartlarına uygun olarak yazılmalıdır.
+
+#### PR Süreçleri ve Kod İnceleme
+
+#### Kod İnceleme:
+	•	Tüm değişiklikler, en az bir ekip üyesi tarafından gözden geçirilmeli.
+	•	PR açıklamaları, yapılan değişikliklerin ne amaçla gerçekleştirildiğini net olarak ifade etmelidir.
+
+#### Merge Kuralları:
+	•	Testlerin başarılı geçtiği, kod standartlarına uyulduğu onaylanmadan merge işlemi yapılmamalıdır.
+	•	Gerektiğinde, adım adım ve küçük parçalarda PR oluşturulması tercih edilmelidir.
+
+
+### İletişim ve Geri Bildirim
+
+#### Dokümantasyon Güncellemeleri:
+	•	Cursor .mdc dokümanı, proje ilerledikçe ve yeni standartlar eklendikçe güncellenecektir.
+
+
+
+
+Klasor yapisi
+
+app/
+├── (tabs)/
+│   ├── _layout.tsx
+│   ├── index.tsx
+│   ├── receiving.tsx
+│   └── processing.tsx
+├── components/
+│   ├── ui/
+│   ├── barcode/
+│   ├── camera/
+│   └── sheets/
+├── features/
+│   ├── dashboard/
+│   ├── scan-barcode/
+│   ├── manual-entry/
+│   ├── auto-mode/
+│   └── gate-scan/
+├── hooks/
+├── services/
+├── utils/
+├── types/
+├── constants/
+└── _layout.tsx
+

@@ -1,13 +1,21 @@
 import { useState, useRef } from 'react';
-import { View, Text, StyleSheet, TouchableOpacity, Dimensions, Platform, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  StyleSheet,
+  TouchableOpacity,
+  Dimensions,
+  Platform,
+  ScrollView,
+} from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import { X, Flashlight, Camera } from 'lucide-react-native';
-import Animated, { 
-  useAnimatedStyle, 
-  useSharedValue, 
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
   withSpring,
   interpolate,
-  Extrapolate
+  Extrapolate,
 } from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 
@@ -39,11 +47,19 @@ type ScannedItem = {
   timestamp: Date;
 };
 
+// Event tipini tanımlayalım
+type PanGestureEvent = {
+  translationY: number;
+};
+
 export default function ReceivingScreen() {
-  const [permission, requestPermission] = Platform.OS === 'web' ? [null, () => {}] : BarCodeScanner.usePermissions();
+  const [permission, requestPermission] =
+    Platform.OS === 'web' ? [null, () => {}] : BarCodeScanner.usePermissions();
   const [scanned, setScanned] = useState(false);
   const [torch, setTorch] = useState(false);
-  const [scannedItems, setScannedItems] = useState<ScannedItem[]>(INITIAL_SCANNED_ITEMS);
+  const [scannedItems, setScannedItems] = useState<ScannedItem[]>(
+    INITIAL_SCANNED_ITEMS
+  );
   const translateY = useSharedValue(0);
   const context = useSharedValue({ y: 0 });
   const scrollRef = useRef(null);
@@ -54,8 +70,9 @@ export default function ReceivingScreen() {
       <View style={styles.webContainer}>
         <Text style={styles.webTitle}>Barcode Scanner</Text>
         <Text style={styles.webDescription}>
-          The barcode scanner feature is only available on mobile devices. 
-          Please use the Expo Go app on your mobile device to access this feature.
+          The barcode scanner feature is only available on mobile devices.
+          Please use the Expo Go app on your mobile device to access this
+          feature.
         </Text>
       </View>
     );
@@ -65,9 +82,12 @@ export default function ReceivingScreen() {
     .onStart(() => {
       context.value = { y: translateY.value };
     })
-    .onUpdate((event) => {
+    .onUpdate((event: PanGestureEvent) => {
       translateY.value = event.translationY + context.value.y;
-      translateY.value = Math.max(MAX_TRANSLATE_Y, Math.min(translateY.value, 0));
+      translateY.value = Math.max(
+        MAX_TRANSLATE_Y,
+        Math.min(translateY.value, 0)
+      );
     })
     .onEnd(() => {
       if (translateY.value > -SCREEN_HEIGHT / 3) {
@@ -102,7 +122,9 @@ export default function ReceivingScreen() {
   if (!permission.granted) {
     return (
       <View style={styles.container}>
-        <Text style={styles.text}>We need your permission to use the camera</Text>
+        <Text style={styles.text}>
+          We need your permission to use the camera
+        </Text>
         <TouchableOpacity style={styles.button} onPress={requestPermission}>
           <Text style={styles.buttonText}>Grant Permission</Text>
         </TouchableOpacity>
@@ -110,7 +132,13 @@ export default function ReceivingScreen() {
     );
   }
 
-  const handleBarCodeScanned = ({ type, data }: { type: string; data: string }) => {
+  const handleBarCodeScanned = ({
+    type,
+    data,
+  }: {
+    type: string;
+    data: string;
+  }) => {
     setScanned(true);
     const newItem: ScannedItem = {
       id: Math.random().toString(),
@@ -139,6 +167,7 @@ export default function ReceivingScreen() {
       <BarCodeScanner
         style={StyleSheet.absoluteFillObject}
         onBarCodeScanned={scanned ? undefined : handleBarCodeScanned}
+        type={BarCodeScanner.Constants.Type.back}
         barCodeTypes={[
           BarCodeScanner.Constants.BarCodeType.code39,
           BarCodeScanner.Constants.BarCodeType.code128,
@@ -146,7 +175,12 @@ export default function ReceivingScreen() {
           BarCodeScanner.Constants.BarCodeType.ean8,
           BarCodeScanner.Constants.BarCodeType.upc_e,
         ]}
-        torchMode={torch ? 'on' : 'off'}
+        // torchMode yerine flashMode kullanılmalı
+        flashMode={
+          torch
+            ? BarCodeScanner.Constants.FlashMode.torch
+            : BarCodeScanner.Constants.FlashMode.off
+        }
       >
         <View style={styles.overlay}>
           <View style={styles.unfocusedContainer}></View>
@@ -164,7 +198,7 @@ export default function ReceivingScreen() {
         </View>
 
         <View style={styles.controls}>
-          <TouchableOpacity 
+          <TouchableOpacity
             style={[styles.controlButton, torch && styles.activeButton]}
             onPress={() => setTorch(!torch)}
           >
@@ -176,16 +210,22 @@ export default function ReceivingScreen() {
           <Animated.View style={[styles.bottomSheet, rBottomSheetStyle]}>
             <View style={styles.bottomSheetHeader}>
               <View style={styles.bottomSheetHandle} />
-              <Text style={styles.scannedCount}>{scannedItems.length} Items Scanned</Text>
+              <Text style={styles.scannedCount}>
+                {scannedItems.length} Items Scanned
+              </Text>
             </View>
 
             {scannedItems.length > 0 && (
               <>
                 <View style={styles.lastScannedItem}>
-                  <Text style={styles.lastScannedCode}>{scannedItems[0]?.code}</Text>
+                  <Text style={styles.lastScannedCode}>
+                    {scannedItems[0]?.code}
+                  </Text>
                   <View style={styles.lastScannedDetails}>
                     <Text style={styles.codeType}>{scannedItems[0]?.type}</Text>
-                    <Text style={styles.timestamp}>{formatTimestamp(scannedItems[0]?.timestamp)}</Text>
+                    <Text style={styles.timestamp}>
+                      {formatTimestamp(scannedItems[0]?.timestamp)}
+                    </Text>
                   </View>
                 </View>
 
@@ -213,7 +253,11 @@ export default function ReceivingScreen() {
                   style={styles.resumeButton}
                   onPress={resumeScanning}
                 >
-                  <Camera size={20} color="#ffffff" style={styles.resumeButtonIcon} />
+                  <Camera
+                    size={20}
+                    color="#ffffff"
+                    style={styles.resumeButtonIcon}
+                  />
                   <Text style={styles.resumeButtonText}>RESUME SCANNING</Text>
                 </TouchableOpacity>
               </>
