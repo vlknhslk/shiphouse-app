@@ -1,21 +1,10 @@
 import { useState, useEffect } from 'react';
+import { Alert, Linking } from 'react-native';
 import { Camera } from 'expo-camera';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
-interface PermissionStatus {
-  camera: boolean;
-  barcode: boolean;
-  loading: boolean;
-  error: string | null;
-}
-
 export function usePermissions() {
-  const [status, setStatus] = useState<PermissionStatus>({
-    camera: false,
-    barcode: false,
-    loading: true,
-    error: null,
-  });
+  const [hasPermissions, setHasPermissions] = useState<boolean | null>(null);
 
   useEffect(() => {
     checkPermissions();
@@ -23,25 +12,35 @@ export function usePermissions() {
 
   const checkPermissions = async () => {
     try {
-      const [cameraPermission, barcodePermission] = await Promise.all([
+      const [cameraStatus, barcodeStatus] = await Promise.all([
         Camera.requestCameraPermissionsAsync(),
         BarCodeScanner.requestPermissionsAsync(),
       ]);
 
-      setStatus({
-        camera: cameraPermission.granted,
-        barcode: barcodePermission.granted,
-        loading: false,
-        error: null,
-      });
+      const hasAllPermissions = cameraStatus.granted && barcodeStatus.granted;
+      setHasPermissions(hasAllPermissions);
+
+      if (!hasAllPermissions) {
+        Alert.alert(
+          'İzin Gerekli',
+          'Kamera ve barkod tarayıcı özelliklerini kullanmak için izin vermeniz gerekiyor.',
+          [
+            { text: 'İptal', style: 'cancel' },
+            {
+              text: 'Ayarlar',
+              onPress: () => Linking.openSettings(),
+            },
+          ]
+        );
+      }
     } catch (error) {
-      setStatus((prev) => ({
-        ...prev,
-        loading: false,
-        error: 'Failed to check permissions',
-      }));
+      console.error('Permission check failed:', error);
+      setHasPermissions(false);
     }
   };
 
-  return status;
+  return {
+    hasPermissions,
+    checkPermissions,
+  };
 }

@@ -1,18 +1,35 @@
 import React, { useRef } from 'react';
-import { View, StyleSheet, TouchableOpacity } from 'react-native';
-import {
-  Camera as ExpoCamera,
-  CameraType as ExpoCameraType,
-} from 'expo-camera';
+import { View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { Camera } from 'expo-camera';
 import { Camera as CameraIcon } from 'lucide-react-native';
-import { colors } from '@/constants';
+import { colors, typography } from '@/constants';
+import { usePermissions } from '@/hooks/usePermissions';
 
 interface PhotoCaptureProps {
   onCapture: (uri: string) => void;
 }
 
 export function PhotoCapture({ onCapture }: PhotoCaptureProps) {
-  const cameraRef = useRef<ExpoCamera>(null);
+  const { hasPermissions } = usePermissions();
+  const cameraRef = useRef<Camera>(null);
+
+  if (hasPermissions === null) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>İzinler kontrol ediliyor...</Text>
+      </View>
+    );
+  }
+
+  if (hasPermissions === false) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>
+          Kamera kullanımı için izin gerekiyor.
+        </Text>
+      </View>
+    );
+  }
 
   const takePicture = async () => {
     if (!cameraRef.current) return;
@@ -30,10 +47,10 @@ export function PhotoCapture({ onCapture }: PhotoCaptureProps) {
 
   return (
     <View style={styles.container}>
-      <ExpoCamera
+      <Camera
         ref={cameraRef}
         style={styles.camera}
-        type={ExpoCameraType.back}
+        type={Camera.Constants.Type.back}
         ratio="16:9"
       >
         <View style={styles.controls}>
@@ -41,7 +58,7 @@ export function PhotoCapture({ onCapture }: PhotoCaptureProps) {
             <CameraIcon size={32} color="#ffffff" />
           </TouchableOpacity>
         </View>
-      </ExpoCamera>
+      </Camera>
     </View>
   );
 }
@@ -69,5 +86,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth: 4,
     borderColor: 'rgba(255,255,255,0.5)',
+  },
+  message: {
+    fontSize: 16,
+    fontFamily: typography.medium,
+    color: colors.text,
+    textAlign: 'center',
+    padding: 20,
   },
 });

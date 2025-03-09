@@ -13,7 +13,6 @@ export default function DashboardScreen() {
 
   const onRefresh = React.useCallback(() => {
     setRefreshing(true);
-    // Simulate refresh
     setTimeout(() => setRefreshing(false), 1000);
   }, []);
 

@@ -11,26 +11,36 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": true,
-      "bundleIdentifier": "com.shiphouse.app"
+      "bundleIdentifier": "com.shiphouse.app",
+      "infoPlist": {
+        "NSCameraUsageDescription": "ShipHouse uygulaması kameranıza erişmek istiyor.",
+        "NSMicrophoneUsageDescription": "ShipHouse uygulaması mikrofonunuza erişmek istiyor."
+      }
     },
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
       },
-      "package": "com.shiphouse.app"
+      "package": "com.shiphouse.app",
+      "permissions": ["CAMERA", "RECORD_AUDIO"]
     },
     "plugins": [
       "expo-router",
       [
+        "expo-camera",
+        {
+          "cameraPermission": "ShipHouse uygulaması kameranıza erişmek istiyor.",
+          "microphonePermission": "ShipHouse uygulaması mikrofonunuza erişmek istiyor."
+        }
+      ],
+      [
         "expo-barcode-scanner",
         {
-          "cameraPermission": "ShipHouse needs access to camera to scan barcodes."
+          "cameraPermission": "ShipHouse uygulaması barkod taraması için kameranıza erişmek istiyor."
         }
       ],
       "expo-font"
