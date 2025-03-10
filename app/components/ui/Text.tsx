@@ -8,9 +8,15 @@ import { typography } from '@/constants';
 
 interface TextProps extends RNTextProps {
   variant?: 'regular' | 'medium' | 'semiBold' | 'bold';
+  children?: React.ReactNode;
 }
 
-export function Text({ style, variant = 'regular', ...props }: TextProps) {
+export default function Text({
+  style,
+  variant = 'regular',
+  children,
+  ...props
+}: TextProps) {
   return (
     <RNText
       style={[
@@ -21,7 +27,9 @@ export function Text({ style, variant = 'regular', ...props }: TextProps) {
         style,
       ]}
       {...props}
-    />
+    >
+      {children}
+    </RNText>
   );
 }
 

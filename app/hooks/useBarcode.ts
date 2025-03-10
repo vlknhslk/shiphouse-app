@@ -1,22 +1,14 @@
 import { useState, useCallback } from 'react';
 import { BarCodeScanner } from 'expo-barcode-scanner';
-import { ScanResult } from '@/types/package';
 
-export function useBarcode() {
+export default function useBarcode() {
   const [isScanning, setIsScanning] = useState(true);
-  const [lastScan, setLastScan] = useState<ScanResult | null>(null);
+  const [lastScan, setLastScan] = useState<string | null>(null);
 
-  const handleBarCodeScanned = useCallback(
-    ({ type, data }: { type: string; data: string }) => {
-      setIsScanning(false);
-      setLastScan({
-        type,
-        data,
-        timestamp: new Date(),
-      });
-    },
-    []
-  );
+  const handleBarCodeScanned = useCallback(({ data }: { data: string }) => {
+    setIsScanning(false);
+    setLastScan(data);
+  }, []);
 
   const resetScanner = useCallback(() => {
     setIsScanning(true);

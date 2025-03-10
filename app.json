@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "ShipHouse",
-    "slug": "shiphouse-app",
+    "slug": "shiphouse",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -13,11 +13,12 @@
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
+      "bundleIdentifier": "com.yourcompany.shiphouse",
+      "buildNumber": "1",
       "supportsTablet": true,
-      "bundleIdentifier": "com.shiphouse.app",
       "infoPlist": {
-        "NSCameraUsageDescription": "ShipHouse uygulaması kameranıza erişmek istiyor.",
-        "NSMicrophoneUsageDescription": "ShipHouse uygulaması mikrofonunuza erişmek istiyor."
+        "NSCameraUsageDescription": "Barkod taraması için kamera izni gerekiyor.",
+        "NSPhotoLibraryUsageDescription": "Fotoğraf yüklemek için galeri izni gerekiyor."
       }
     },
     "android": {
@@ -26,7 +27,12 @@
         "backgroundColor": "#ffffff"
       },
       "package": "com.shiphouse.app",
-      "permissions": ["CAMERA", "RECORD_AUDIO"]
+      "permissions": [
+        "CAMERA",
+        "RECORD_AUDIO",
+        "android.permission.CAMERA",
+        "android.permission.RECORD_AUDIO"
+      ]
     },
     "plugins": [
       "expo-router",
@@ -40,7 +46,7 @@
       [
         "expo-barcode-scanner",
         {
-          "cameraPermission": "ShipHouse uygulaması barkod taraması için kameranıza erişmek istiyor."
+          "cameraPermission": "Barkod taraması için kamera izni gerekiyor."
         }
       ],
       "expo-font"
@@ -49,6 +55,42 @@
     "experiments": {
       "tsconfigPaths": true,
       "typedRoutes": true
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "681169bb-e35b-498e-afc5-b0e22714fa48"
+      }
+    }
+  },
+  "cli": {
+    "version": ">= 5.9.1",
+    "appVersionSource": "remote"
+  },
+  "build": {
+    "development": {
+      "developmentClient": true,
+      "distribution": "internal"
+    },
+    "preview": {
+      "distribution": "internal",
+      "ios": {
+        "simulator": true
+      }
+    },
+    "production": {
+      "autoIncrement": true
+    }
+  },
+  "submit": {
+    "production": {
+      "ios": {
+        "appleId": "volkan@forwardme.com",
+        "ascAppId": "your-app-store-connect-app-id",
+        "appleTeamId": "GL5T24UKKJ"
+      }
     }
   }
 }

@@ -5,7 +5,8 @@ export interface Package {
   suiteCode: string;
   projectName: string; // 'Forwardme.com' | 'Ship7.com' | 'Store2Door.com'
   entryDate: Date;
-  status: 'received' | 'processing' | 'completed';
+  status: 'received' | 'processing' | 'processed' | 'completed';
+  timestamp: Date;
   photos?: string[];
   weight?: string;
   notes?: string;

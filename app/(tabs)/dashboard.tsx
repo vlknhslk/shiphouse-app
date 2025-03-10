@@ -1,8 +1,8 @@
 import React from 'react';
 import { View, StyleSheet, ScrollView, RefreshControl } from 'react-native';
-import { Text } from '@/components/ui/Text';
-import { Header } from '@/components/ui/Header';
-import { Button } from '@/components/ui/Button';
+import Text from '@/components/ui/Text';
+import Header from '@/components/ui/Header';
+import Button from '@/components/ui/Button';
 import { colors, typography } from '@/constants';
 import { useRouter } from 'expo-router';
 import { mockDashboardStats, mockPackages } from '@/services/mockData';
@@ -126,19 +126,19 @@ const styles = StyleSheet.create({
     backgroundColor: colors.card,
     borderRadius: 12,
     padding: 16,
-    marginHorizontal: 8,
+    marginHorizontal: 4,
     alignItems: 'center',
   },
   statValue: {
-    fontSize: 32,
+    fontSize: 24,
     fontFamily: typography.bold,
     color: colors.primary,
     marginBottom: 4,
   },
   statLabel: {
-    fontSize: 14,
+    fontSize: 12,
     fontFamily: typography.medium,
-    color: colors.text,
+    color: colors.textSecondary,
   },
   recentContainer: {
     marginBottom: 24,

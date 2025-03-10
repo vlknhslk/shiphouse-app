@@ -14,26 +14,29 @@ export default function TabLayout() {
         headerShown: false,
         tabBarActiveTintColor: colors.primary,
         tabBarInactiveTintColor: colors.textSecondary,
-        tabBarStyle: {
-          borderTopWidth: 1,
-          borderTopColor: colors.border,
-        },
       }}
     >
       <Tabs.Screen
         name="dashboard"
         options={{
           title: 'Dashboard',
-          tabBarIcon: ({ color, size }: TabBarIconProps) => (
-            <Home size={size} color={color} />
-          ),
+          tabBarIcon: ({ color, size }) => <Home size={size} color={color} />,
         }}
       />
       <Tabs.Screen
         name="receiving"
         options={{
           title: 'Receiving',
-          tabBarIcon: ({ color, size }: TabBarIconProps) => (
+          tabBarIcon: ({ color, size }) => (
+            <Package size={size} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="processing"
+        options={{
+          title: 'Processing',
+          tabBarIcon: ({ color, size }) => (
             <Package size={size} color={color} />
           ),
         }}

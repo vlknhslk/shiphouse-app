@@ -1,6 +1,6 @@
 import React, { ReactNode } from 'react';
 import { TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
-import { Text } from './Text';
+import Text from './Text';
 import { colors, typography } from '@/constants';
 
 interface ButtonProps {
@@ -12,7 +12,7 @@ interface ButtonProps {
   disabled?: boolean;
 }
 
-export function Button({
+export default function Button({
   children,
   variant = 'primary',
   onPress,

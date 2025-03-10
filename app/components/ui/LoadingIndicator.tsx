@@ -6,7 +6,7 @@ interface LoadingIndicatorProps {
   color?: string;
 }
 
-export function LoadingIndicator({
+export default function LoadingIndicator({
   size = 'large',
   color = colors.primary,
 }: LoadingIndicatorProps) {

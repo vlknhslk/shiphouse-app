@@ -1,9 +1,8 @@
 import React from 'react';
-import { View, StyleSheet, TouchableOpacity, Platform } from 'react-native';
+import { View, StyleSheet, TouchableOpacity } from 'react-native';
 import { ArrowLeft } from 'lucide-react-native';
-import { useRouter } from 'expo-router';
+import Text from './Text';
 import { colors, typography } from '@/constants';
-import { Text } from './Text';
 
 interface HeaderProps {
   title: string;
@@ -11,9 +10,7 @@ interface HeaderProps {
   rightAction?: React.ReactNode;
 }
 
-export function Header({ title, onBack, rightAction }: HeaderProps) {
-  const router = useRouter();
-
+export default function Header({ title, onBack, rightAction }: HeaderProps) {
   return (
     <View style={styles.container}>
       {onBack && (
@@ -39,6 +36,10 @@ const styles = StyleSheet.create({
   },
   backButton: {
     marginRight: 16,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   title: {
     flex: 1,

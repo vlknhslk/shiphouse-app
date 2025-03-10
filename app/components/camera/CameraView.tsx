@@ -9,7 +9,7 @@ interface CameraViewProps {
   onClose: () => void;
 }
 
-export function CameraView({ onCapture, onClose }: CameraViewProps) {
+export default function CameraView({ onCapture, onClose }: CameraViewProps) {
   const [photo, setPhoto] = useState<string | null>(null);
 
   const handleCapture = (uri: string) => {

@@ -9,7 +9,7 @@ interface PhotoCaptureProps {
   onCapture: (uri: string) => void;
 }
 
-export function PhotoCapture({ onCapture }: PhotoCaptureProps) {
+export default function PhotoCapture({ onCapture }: PhotoCaptureProps) {
   const { hasPermissions } = usePermissions();
   const cameraRef = useRef<Camera>(null);
 

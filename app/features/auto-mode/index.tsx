@@ -1,13 +1,14 @@
 import React, { useState, useEffect } from 'react';
-import { View, StyleSheet, Vibration } from 'react-native';
+import { View, StyleSheet, Vibration, Linking } from 'react-native';
 import { useRouter } from 'expo-router';
-import { Header } from '@/components/ui/Header';
-import { Button } from '@/components/ui/Button';
-import { Text } from '@/components/ui/Text';
+import Header from '@/components/ui/Header';
+import Button from '@/components/ui/Button';
+import Text from '@/components/ui/Text';
 import { colors, typography } from '@/constants';
-import { useBarcode } from '@/hooks/useBarcode';
-import { BarCodeScanner } from 'expo-barcode-scanner';
+import useBarcode from '@/hooks/useBarcode';
+import { BarCodeScanner, BarCodeScannerResult } from 'expo-barcode-scanner';
 import { Package } from '@/types/package';
+import { usePermissions } from '@/hooks/usePermissions';
 
 interface Stats {
   scanned: number;
@@ -17,7 +18,7 @@ interface Stats {
 
 export default function AutoModeScreen() {
   const router = useRouter();
-  const { isScanning, handleBarCodeScanned, resetScanner } = useBarcode();
+  const { isScanning, resetScanner } = useBarcode();
   const [active, setActive] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [lastPackage, setLastPackage] = useState<Package | null>(null);
@@ -26,6 +27,7 @@ export default function AutoModeScreen() {
     processed: 0,
     failed: 0,
   });
+  const { hasPermission } = usePermissions();
 
   useEffect(() => {
     if (!active) {
@@ -33,18 +35,17 @@ export default function AutoModeScreen() {
     }
   }, [active]);
 
-  const handleScan = async ({ type, data }: { type: string; data: string }) => {
+  const handleScan = async (result: BarCodeScannerResult) => {
     if (!active || processing) return;
 
     try {
       setProcessing(true);
       Vibration.vibrate(100);
 
-      // TODO: Process package with API
       const processedPackage: Package = {
         id: Math.random().toString(),
-        trackingNumber: data,
-        status: 'processed',
+        trackingNumber: result.data,
+        status: 'processed' as const,
         timestamp: new Date(),
       };
 
@@ -68,6 +69,29 @@ export default function AutoModeScreen() {
       setProcessing(false);
     }
   };
+
+  if (hasPermission === null) {
+    return (
+      <View style={styles.container}>
+        <Header title="Auto Mode" onBack={() => router.back()} />
+        <View style={styles.content}>
+          <Text>İzinler kontrol ediliyor...</Text>
+        </View>
+      </View>
+    );
+  }
+
+  if (hasPermission === false) {
+    return (
+      <View style={styles.container}>
+        <Header title="Auto Mode" onBack={() => router.back()} />
+        <View style={styles.content}>
+          <Text>Kamera izni gerekiyor</Text>
+          <Button onPress={() => Linking.openSettings()}>Ayarları Aç</Button>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.container}>
@@ -106,6 +130,17 @@ export default function AutoModeScreen() {
             <BarCodeScanner
               onBarCodeScanned={handleScan}
               style={styles.scanner}
+              type={BarCodeScanner.Constants.Type.back}
+              barCodeTypes={[
+                BarCodeScanner.Constants.BarCodeType.code128,
+                BarCodeScanner.Constants.BarCodeType.code39,
+                BarCodeScanner.Constants.BarCodeType.ean13,
+                BarCodeScanner.Constants.BarCodeType.ean8,
+              ]}
+              onError={(error) => {
+                console.error('Barkod tarayıcı hatası:', error);
+                setActive(false);
+              }}
             />
             {processing && (
               <View style={styles.processingOverlay}>
