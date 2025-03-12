@@ -1,23 +1,33 @@
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useMemo } from 'react';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 
 export default function useBarcode() {
-  const [isScanning, setIsScanning] = useState(true);
-  const [lastScan, setLastScan] = useState<string | null>(null);
+  // State'leri useMemo ile optimize edelim
+  const initialState = useMemo(
+    () => ({
+      isScanning: true,
+      lastScan: null,
+    }),
+    []
+  );
 
+  const [state, setState] = useState(initialState);
+
+  // Callback'leri useCallback ile optimize edelim
   const handleBarCodeScanned = useCallback(({ data }: { data: string }) => {
-    setIsScanning(false);
-    setLastScan(data);
+    setState((prev) => ({
+      ...prev,
+      isScanning: false,
+      lastScan: data,
+    }));
   }, []);
 
   const resetScanner = useCallback(() => {
-    setIsScanning(true);
-    setLastScan(null);
-  }, []);
+    setState(initialState);
+  }, [initialState]);
 
   return {
-    isScanning,
-    lastScan,
+    ...state,
     handleBarCodeScanned,
     resetScanner,
   };

@@ -11,14 +11,17 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    "assetBundlePatterns": ["**/*"],
+    "assetBundlePatterns": [
+      "**/*"
+    ],
     "ios": {
       "bundleIdentifier": "com.yourcompany.shiphouse",
       "buildNumber": "1",
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "Barkod taraması için kamera izni gerekiyor.",
-        "NSPhotoLibraryUsageDescription": "Fotoğraf yüklemek için galeri izni gerekiyor."
+        "NSPhotoLibraryUsageDescription": "Fotoğraf yüklemek için galeri izni gerekiyor.",
+        "ITSAppUsesNonExemptEncryption": false
       }
     },
     "android": {
